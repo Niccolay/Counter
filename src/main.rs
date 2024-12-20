@@ -8,7 +8,7 @@ async fn view_counter() -> impl Responder {
     let mut con = client.get_connection().unwrap();
 
     let count: i32 = con.incr("github_profile_views", 1).unwrap();
-    HttpResponse::Ok().json(format!("Visitas: {}", count))
+    HttpResponse::Ok().json(format!("Profile views: {}", count))
 }
 
 #[actix_web::main]
