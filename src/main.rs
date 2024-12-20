@@ -1,6 +1,12 @@
 use actix_web::{web, App, HttpServer, HttpResponse, Responder};
 use redis::Commands;
+use serde::Serialize;
 use std::env;
+
+#[derive(Serialize)]
+struct Response {
+    views: i32,
+}
 
 async fn view_counter() -> impl Responder {
     let redis_url = env::var("REDIS_URL").expect("REDIS_URL");
@@ -8,7 +14,7 @@ async fn view_counter() -> impl Responder {
     let mut con = client.get_connection().unwrap();
 
     let count: i32 = con.incr("github_profile_views", 1).unwrap();
-    HttpResponse::Ok().json(format!("Profile views: {}", count))
+    HttpResponse::Ok().json(Response { views: count })
 }
 
 #[actix_web::main]
