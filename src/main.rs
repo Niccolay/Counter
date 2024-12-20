@@ -1,4 +1,5 @@
 use actix_web::{web, App, HttpServer, HttpResponse, Responder};
+use actix_cors::Cors;
 use redis::Commands;
 use serde::Serialize;
 use std::env;
@@ -24,6 +25,7 @@ async fn main() -> std::io::Result<()> {
     let port = env::var("PORT").unwrap_or_else(|_| "8080".to_string());
     HttpServer::new(|| {
         App::new()
+            .wrap(Cors::default().allow_any_origin())
             .route("/views", web::get().to(view_counter))
     })
     .bind(("0.0.0.0", port.parse().unwrap()))?
