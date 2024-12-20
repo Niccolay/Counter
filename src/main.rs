@@ -14,11 +14,13 @@ async fn view_counter() -> impl Responder {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
+
+    let port = env::var("PORT").unwrap_or_else(|_| "8080".to_string());
     HttpServer::new(|| {
         App::new()
             .route("/views", web::get().to(view_counter))
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind(("0.0.0.0", port.parse().unwrap()))?
     .run()
     .await
 }
